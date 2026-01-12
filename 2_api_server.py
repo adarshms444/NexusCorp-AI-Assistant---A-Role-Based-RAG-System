@@ -35,7 +35,6 @@ llm = ChatGoogleGenerativeAI(
     convert_system_message_to_human=True
 )
 
-# --- Main prompt for the final answer ---
 prompt_template = ChatPromptTemplate.from_template("""
 You are a helpful and accurate AI assistant for NexusCorp Analytics.
 You are equipped with role-based access to company knowledge.
@@ -104,13 +103,11 @@ async def chat(request: Request):
     docs = []
     
     if "c-levelexecutives" in user_role:
-        # --- Multi-Query Fusion Retrieval for C-Level ---
         
         # 1. Create a chain to generate sub-questions from the original question.
         generate_queries_chain = multi_query_prompt | llm | StrOutputParser()
         
         # 2. Get the list of queries, including the original one.
-        # Use .ainvoke for async compatibility in a FastAPI endpoint
         generated_queries = await generate_queries_chain.ainvoke({"question": message})
         queries = [message] + generated_queries.strip().split('\n')
         
@@ -129,7 +126,7 @@ async def chat(request: Request):
         search_kwargs['filter'] = {'role': 'general'}
         docs = vectordb.similarity_search(message, **search_kwargs)
         
-    else: # Handles all other departmental roles
+    else:
         departmental_filter = {
             "$or": [
                 {"role": {"$eq": user_role}},
@@ -144,9 +141,7 @@ async def chat(request: Request):
 
     context = "\n\n".join([doc.page_content for doc in docs])
 
-    # Generate the final response using the fused context.
     chain = prompt_template | llm
-    # Use .ainvoke for async compatibility in a FastAPI endpoint
     response = await chain.ainvoke({
         "role": user_info['role'],
         "context": context,
