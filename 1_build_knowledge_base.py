@@ -23,15 +23,12 @@ for department in os.listdir(DATA_DIR):
     if os.path.isdir(dept_path):
         print(f"\n🔍 Processing department: {department}")
         
-        # We will process each file individually to apply the best splitter
         for file in os.listdir(dept_path):
             file_path = os.path.join(dept_path, file)
             split_docs_for_file = []
 
             try:
                 if file.endswith(".md"):
-                    # Use MarkdownHeaderTextSplitter for Markdown files
-                    # Define headers to split by. The content below these headers will form chunks.
                     headers_to_split_on = [
                         ("#", "Header1"),  # Top-level report title
                         ("##", "Header2"), # Sections like Executive Summary, Campaign Analysis
@@ -47,17 +44,13 @@ for department in os.listdir(DATA_DIR):
                     )
                     md_chunks = markdown_splitter.split_text(markdown_text)
                     
-                    # Further split large Markdown chunks using RecursiveCharacterTextSplitter
-                    # This handles cases where a single header section is very long
+       
                     recursive_splitter = RecursiveCharacterTextSplitter(chunk_size=700, chunk_overlap=70)
                     for chunk in md_chunks:
-                        # Ensure chunk.page_content is not empty before splitting
                         if chunk.page_content.strip():
-                            # The MarkdownHeaderTextSplitter already adds metadata based on headers
-                            # We retain existing metadata and add department role
                             sub_chunks = recursive_splitter.split_documents([chunk])
                             for sub_chunk in sub_chunks:
-                                sub_chunk.metadata.update(chunk.metadata) # Merge metadata
+                                sub_chunk.metadata.update(chunk.metadata)
                                 split_docs_for_file.append(sub_chunk)
                         
                 elif file.endswith(".csv"):
@@ -66,7 +59,7 @@ for department in os.listdir(DATA_DIR):
                     recursive_splitter = RecursiveCharacterTextSplitter(chunk_size=700, chunk_overlap=70)
                     split_docs_for_file.extend(recursive_splitter.split_documents(docs))
                 else:
-                    continue # Skip other file types
+                    continue 
 
                 # Add metadata (role and category for 'general' dept) to all chunks from this file
                 for doc in split_docs_for_file:
@@ -80,7 +73,7 @@ for department in os.listdir(DATA_DIR):
             except Exception as e:
                 print(f"❌ Failed to load {file}: {e}")
 
-        if not split_docs_for_file: # Check if any docs were processed for the department
+        if not split_docs_for_file:
             print(f"⚠️ No documents found for department: {department}")
             continue
 
