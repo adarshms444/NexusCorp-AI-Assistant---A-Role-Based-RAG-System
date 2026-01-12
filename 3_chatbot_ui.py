@@ -14,13 +14,11 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- HELPER FUNCTION TO ENCODE IMAGES ---
 def img_to_base64(image_path):
     """Converts an image file to a base64 encoded string."""
     with open(image_path, "rb") as img_file:
         return base64.b64encode(img_file.read()).decode()
 
-# --- CUSTOM CSS FOR A POLISHED UI ---
 def load_css():
     # Path to your background image
     background_image_path = Path("assets/welcome_banner.png")
@@ -93,11 +91,9 @@ def load_css():
 
 load_css()
 
-# --- SESSION STATE ---
 if "user" not in st.session_state:
     st.session_state.user = None
 
-# --- AUTHENTICATION LOGIC ---
 def login(username, password):
     try:
         response = requests.get("http://127.0.0.1:8000/login", auth=HTTPBasicAuth(username, password))
@@ -111,7 +107,6 @@ def login(username, password):
     except requests.exceptions.ConnectionError:
         st.error("Connection error: Could not connect to the API server.")
 
-# --- UI RENDERING ---
 
 # 1. LOGIN VIEW
 if st.session_state.user is None:
