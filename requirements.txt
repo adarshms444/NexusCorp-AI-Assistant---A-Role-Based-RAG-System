@@ -1,0 +1,13 @@
+# requirements.txt
+
+fastapi
+uvicorn
+streamlit
+requests
+langchain
+langchain-community
+sentence-transformers
+faiss-cpu
+langchain-groq
+python-dotenv
+langchain-google-genai
