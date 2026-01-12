@@ -133,9 +133,4 @@ streamlit run 3_chatbot_ui.py
 
 ---
 
-## 🚫 What This System Prevents
-* Cross-department data exposure
-* Hallucinated enterprise answers
-* Keyword-only search failures
 
----
