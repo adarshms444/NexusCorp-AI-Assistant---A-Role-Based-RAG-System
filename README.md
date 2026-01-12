@@ -1,4 +1,4 @@
-# 🧠 NexusCorp Assistant
+# NexusCorp Assistant
 
 ### A Role-Based Retrieval-Augmented Generation (RAG) System for Secure Enterprise Knowledge Access
 
@@ -78,4 +78,64 @@ NexusCorp-Assistant/
 ├── .env                      # Environment variables (API Keys)
 └── README.md                 # Project documentation
 
+```
 
+## 💻 Setup & Run
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/your-username/NexusCorp-Assistant.git
+cd NexusCorp-Assistant
+```
+
+2. Create a virtual environment and activate it (Windows):
+
+```powershell
+python -m venv venv
+venv\Scripts\activate
+```
+
+3. Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+4. Configure Environment Variables:
+Create a .env file at the project root and add your Google API Key:
+
+```
+GOOGLE_API_KEY="your_google_gemini_api_key_here"
+
+```
+5. Build the Knowledge Base:
+Run the ingestion script to process documents and create the FAISS index.
+
+```
+python 1_build_knowledge_base.py
+```
+
+6. Start the API Server:
+Launch the FastAPI backend.
+
+```
+uvicorn api_server:app --reload
+```
+
+7. Run the Chat Interface:
+Open a new terminal (keep the API running) and launch the Streamlit app.
+
+```
+streamlit run 3_chatbot_ui.py
+```
+
+
+---
+
+## 🚫 What This System Prevents
+* Cross-department data exposure
+* Hallucinated enterprise answers
+* Keyword-only search failures
+
+---
